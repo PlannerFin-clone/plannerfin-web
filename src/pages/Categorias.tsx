@@ -1,9 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { Plus, Edit2, Trash2, Tag, AlertCircle, X, TrendingUp, TrendingDown } from 'lucide-react';
+import { Plus, Edit2, Trash2, Tag, AlertCircle, X, TrendingUp, TrendingDown, Palette } from 'lucide-react';
 import { categoriaService } from '../services/api';
 import type { ApiResponse, Categoria, CategoriaRequest } from '../types';
 import { TipoTransacao, formatDate } from '../types';
 import { useAuth } from '../contexts/AuthContext';
+
+// Paleta de cores pré-definidas baseada na paleta do Tailwind CSS
+const PALETA_CORES = [
+  '#EF4444', // red-500
+  '#F97316', // orange-500
+  '#F59E0B', // amber-500
+  '#EAB308', // yellow-500
+  '#10B981', // emerald-500
+  '#06B6D4', // cyan-500
+  '#3B82F6', // blue-500
+  '#6366F1', // indigo-500
+  '#8B5CF6', // violet-500
+  '#EC4899', // pink-500
+  '#A855F7', // purple-500
+  '#14B8A6', // teal-500
+];
 
 /**
  * Página de Gestão de Categorias
@@ -115,6 +131,22 @@ const Categorias: React.FC = () => {
     setFormData(prev => ({
       ...prev,
       tipo,
+    }));
+  };
+
+  // Selecionar cor da paleta
+  const handleSelectColor = (cor: string) => {
+    setFormData(prev => ({
+      ...prev,
+      cor,
+    }));
+  };
+
+  // Manipular cor customizada
+  const handleCustomColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      cor: e.target.value,
     }));
   };
 
@@ -487,6 +519,114 @@ const Categorias: React.FC = () => {
                     </label>
                   </div>
                 </div>
+              </div>
+
+              {/* Seletor de Cores */}
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Cor da Categoria <span className="text-gray-500">(opcional)</span>
+                </label>
+                <div className="flex items-center mb-3">
+                  <Palette className="w-4 h-4 text-gray-500 mr-2" />
+                  <p className="text-sm text-gray-600">
+                    Escolha uma cor para identificar visualmente esta categoria nos gráficos
+                  </p>
+                </div>
+
+                {/* Paleta de cores pré-definidas */}
+                <div className="mb-6">
+                  <div className="grid grid-cols-6 sm:grid-cols-8 gap-3">
+                    {PALETA_CORES.map((cor, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={() => handleSelectColor(cor)}
+                        className={`
+                          w-10 h-10 rounded-full border-2 transition-all duration-200
+                          flex items-center justify-center
+                          ${formData.cor === cor
+                            ? 'scale-110 border-gray-800 shadow-lg ring-2 ring-offset-2 ring-gray-300'
+                            : 'border-gray-300 hover:border-gray-500 hover:scale-105'
+                          }
+                        `}
+                        style={{ backgroundColor: cor }}
+                        title={`Cor ${index + 1}: ${cor}`}
+                      >
+                        {formData.cor === cor && (
+                          <div className="w-5 h-5 bg-white/80 rounded-full flex items-center justify-center">
+                            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: cor }}></div>
+                          </div>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Cor customizada */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-gray-700">Cor personalizada</span>
+                    {formData.cor && !PALETA_CORES.includes(formData.cor) && (
+                      <span className="text-xs text-gray-500">Cor customizada selecionada</span>
+                    )}
+                  </div>
+                  <div className="flex items-center space-x-4">
+                    <div className="relative">
+                      <input
+                        type="color"
+                        value={formData.cor || '#3B82F6'}
+                        onChange={handleCustomColorChange}
+                        className="w-12 h-12 rounded-lg cursor-pointer border border-gray-300"
+                      />
+                      <div className="absolute inset-0 rounded-lg border border-gray-400 pointer-events-none"></div>
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-3">
+                        <div
+                          className="w-8 h-8 rounded-lg border border-gray-300"
+                          style={{ backgroundColor: formData.cor || '#E5E7EB' }}
+                        ></div>
+                        <div className="flex-1">
+                          <input
+                            type="text"
+                            value={formData.cor || ''}
+                            onChange={(e) => setFormData(prev => ({ ...prev, cor: e.target.value }))}
+                            placeholder="#3B82F6"
+                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                          />
+                        </div>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-2">
+                        Clique no quadrado para abrir o seletor de cores ou digite um código HEX
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Cor atual selecionada */}
+                {formData.cor && (
+                  <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <div
+                          className="w-6 h-6 rounded-full border border-gray-300 mr-3"
+                          style={{ backgroundColor: formData.cor }}
+                        ></div>
+                        <div>
+                          <p className="text-sm font-medium text-gray-800">Cor selecionada</p>
+                          <p className="text-sm text-gray-600 font-mono">{formData.cor}</p>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setFormData(prev => ({ ...prev, cor: null }))}
+                        className="text-sm text-red-600 hover:text-red-700 font-medium"
+                      >
+                        Remover cor
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Rodapé do Modal */}

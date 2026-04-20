@@ -119,10 +119,10 @@ const Sidebar: React.FC = () => {
           <p className="text-lg font-bold truncate">
             {usuario?.nome?.split(' ')[0] || 'Usuário'}
           </p>
-          <p className="text-xs text-green-400 mt-2 flex items-center gap-1">
-            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+          <span className="text-xs text-green-400 mt-2 flex items-center gap-1">
+            <span className="w-2 h-2 bg-green-500 rounded-full inline-block"></span>
             Sistema ativo e sincronizado
-          </p>
+          </span>
         </div>
       </div>
 

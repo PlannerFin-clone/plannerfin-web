@@ -100,6 +100,13 @@ export interface DashboardResponse {
   limiteTotalCartoes: number;
   limiteDisponivelCartoes: number;
 
+  // Variações percentuais (mês atual vs anterior)
+  variacaoPatrimonio: number;
+  variacaoSaldoContas: number;
+  variacaoReceitas: number;
+  variacaoDespesas: number;
+  variacaoSaldoMensal: number;
+
   // Resumo do mês atual
   resumoMesAtual: ResumoMensal;
   resumoMesAnterior: ResumoMensal;
@@ -115,6 +122,10 @@ export interface DashboardResponse {
 
   // Dívidas ativas
   dividasAtivas: DividaResumo[];
+
+  // Dados para gráficos
+  despesasPorCategoria: DespesaCategoria[];
+  historicoMensal: HistoricoMensal[];
 }
 
 export interface ResumoMensal {
@@ -162,6 +173,20 @@ export interface DividaResumo {
   valorParcela: number;
   proximoVencimento: string; // ISO date string
   parcelasRestantes: number;
+}
+
+export interface DespesaCategoria {
+  categoriaNome: string;
+  cor: string; // Código hex da cor (ex: "#3B82F6")
+  valorTotal: number;
+}
+
+export interface HistoricoMensal {
+  mesLabel: string; // "Jan", "Fev", "Mar", etc.
+  mes: number;
+  ano: number;
+  receitas: number;
+  despesas: number;
 }
 
 // ==================== REQUEST DTOs ====================
