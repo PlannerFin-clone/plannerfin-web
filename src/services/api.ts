@@ -14,12 +14,42 @@ const api: AxiosInstance = axios.create({
 });
 
 /**
- * Interceptor para logging de requisições em desenvolvimento
+ * Função para obter token JWT do localStorage
+ */
+const getToken = (): string | null => {
+  return localStorage.getItem('plannerfin_token');
+};
+
+/**
+ * Função para fazer logout quando token expirar
+ */
+const handleLogout = () => {
+  localStorage.removeItem('plannerfin_token');
+  localStorage.removeItem('plannerfin_user');
+  delete api.defaults.headers.common['Authorization'];
+  // Redirecionar para login
+  if (window.location.pathname !== '/login') {
+    window.location.href = '/login';
+  }
+};
+
+/**
+ * Interceptor para injetar token JWT e logging de requisições
  */
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
+    // Adicionar token JWT se disponível
+    const token = getToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    // Logging em desenvolvimento
     if (import.meta.env.DEV) {
-      console.log(`[API Request] ${config.method?.toUpperCase()} ${config.url}`, config.params || {});
+      console.log(`[API Request] ${config.method?.toUpperCase()} ${config.url}`, {
+        params: config.params || {},
+        headers: config.headers,
+      });
     }
     return config;
   },
@@ -55,8 +85,8 @@ api.interceptors.response.use(
     if (error.response) {
       switch (error.response.status) {
         case 401:
-          console.error('Não autorizado - faça login novamente');
-          // TODO: Redirecionar para login quando implementarmos autenticação
+          console.error('Não autorizado - token expirado ou inválido');
+          handleLogout(); // Fazer logout e redirecionar
           break;
         case 403:
           console.error('Acesso proibido - você não tem permissão para este recurso');
@@ -186,6 +216,44 @@ export const orcamentoService = {
 
   delete: (id: string, usuarioId: string) =>
     api.delete(`/orcamentos/${id}?usuarioId=${usuarioId}`),
+};
+
+export const metaService = {
+  getAll: (usuarioId: string) =>
+    api.get(`/metas?usuarioId=${usuarioId}`),
+
+  getAlcancadas: (usuarioId: string) =>
+    api.get(`/metas/alcancadas?usuarioId=${usuarioId}`),
+
+  getNaoAlcancadas: (usuarioId: string) =>
+    api.get(`/metas/nao-alcancadas?usuarioId=${usuarioId}`),
+
+  getById: (id: string, usuarioId: string) =>
+    api.get(`/metas/${id}?usuarioId=${usuarioId}`),
+
+  create: (data: any, usuarioId: string) =>
+    api.post(`/metas?usuarioId=${usuarioId}`, data),
+
+  update: (id: string, data: any, usuarioId: string) =>
+    api.put(`/metas/${id}?usuarioId=${usuarioId}`, data),
+
+  delete: (id: string, usuarioId: string) =>
+    api.delete(`/metas/${id}?usuarioId=${usuarioId}`),
+
+  adicionarValor: (id: string, valor: number, usuarioId: string) =>
+    api.post(`/metas/${id}/adicionar-valor?valor=${valor}&usuarioId=${usuarioId}`),
+
+  removerValor: (id: string, valor: number, usuarioId: string) =>
+    api.post(`/metas/${id}/remover-valor?valor=${valor}&usuarioId=${usuarioId}`),
+
+  getEstatisticas: (usuarioId: string) =>
+    api.get(`/metas/estatisticas?usuarioId=${usuarioId}`),
+
+  verificarPrazoProximo: (id: string, usuarioId: string) =>
+    api.get(`/metas/${id}/prazo-proximo?usuarioId=${usuarioId}`),
+
+  verificarVencida: (id: string, usuarioId: string) =>
+    api.get(`/metas/${id}/vencida?usuarioId=${usuarioId}`),
 };
 
 export default api;

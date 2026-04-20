@@ -223,6 +223,36 @@ export interface OrcamentoRequest {
   ano: number;
 }
 
+// ==================== METAS ====================
+
+export interface Meta {
+  id: string;
+  nome: string;
+  valorAlvo: number;
+  valorAtual: number;
+  dataPrazo: string | null; // ISO date string
+  imagemUrl: string | null;
+  percentualConcluido: number;
+  valorRestante: number;
+  alcancada: boolean;
+  createdAt: string; // ISO datetime string
+  updatedAt: string; // ISO datetime string
+}
+
+export interface MetaRequest {
+  nome: string;
+  valorAlvo: number;
+  valorAtual?: number;
+  dataPrazo?: string | null; // ISO date string
+  imagemUrl?: string | null;
+}
+
+export interface MetaStats {
+  valorGuardadoTotal: number;
+  valorAlvoTotal: number;
+  progressoTotal: number;
+}
+
 // ==================== UTILITY TYPES ====================
 
 /**
@@ -275,6 +305,53 @@ export function formatCurrency(value: number): string {
  */
 export function formatPercentage(value: number): string {
   return `${value.toFixed(1)}%`;
+}
+
+// ==================== AUTENTICAÇÃO ====================
+
+export interface Usuario {
+  id: string;
+  nome: string;
+  email: string;
+  numeroWhatsapp: string | null;
+  diasNotificacao: number;
+  notificarFixas: boolean;
+  notificarNaoFixas: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LoginRequest {
+  email: string;
+  senha: string;
+}
+
+export interface RegisterRequest {
+  nome: string;
+  email: string;
+  senha: string;
+  numeroWhatsapp?: string | null;
+  diasNotificacao?: number;
+  notificarFixas?: boolean;
+  notificarNaoFixas?: boolean;
+}
+
+export interface AuthResponse {
+  token: string;
+  tipo: string;
+  usuario: Usuario;
+}
+
+// ==================== CONTEXTO DE AUTENTICAÇÃO ====================
+
+export interface AuthContextType {
+  usuario: Usuario | null;
+  token: string | null;
+  isLoading: boolean;
+  login: (email: string, senha: string) => Promise<boolean>;
+  register: (data: RegisterRequest) => Promise<boolean>;
+  logout: () => void;
+  isAuthenticated: boolean;
 }
 
 /**

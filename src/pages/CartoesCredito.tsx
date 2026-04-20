@@ -2,14 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { Plus, Edit2, Trash2, CreditCard, AlertCircle, X, Calendar, DollarSign } from 'lucide-react';
 import { cartaoCreditoService } from '../services/api';
 import type { ApiResponse, CartaoCredito, CartaoCreditoRequest } from '../types';
+import { useAuth } from '../contexts/AuthContext';
 
 /**
  * Página de Gestão de Cartões de Crédito
  * Exibe cartões em cards estilizados como cartões físicos
  */
 const CartoesCredito: React.FC = () => {
-  // ID do usuário fixo para testes
-  const USER_ID = 'c987f42a-abf7-4412-8b73-18947348ae64';
+  // Puxa o usuário logado do contexto de autenticação
+  const { usuario } = useAuth(); 
+  
+  // Usa o ID real. Se por algum motivo não houver usuário, passa vazio para não quebrar a tela
+  const USER_ID = usuario?.id || '';
 
   // Estados principais
   const [cartoes, setCartoes] = useState<CartaoCredito[]>([]);

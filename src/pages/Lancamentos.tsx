@@ -18,14 +18,18 @@ import {
 import { transacaoService, categoriaService, contaBancariaService, cartaoCreditoService } from '../services/api';
 import type { ApiResponse, Transacao, TransacaoRequest, Categoria, ContaBancaria, CartaoCredito } from '../types';
 import { TipoTransacao, formatCurrency, formatDate } from '../types';
+import { useAuth } from '../contexts/AuthContext';
 
 /**
  * Página de Lançamentos Financeiros
  * Tabela completa de transações com CRUD via modal
  */
 const Lancamentos: React.FC = () => {
-  // ID do usuário fixo para testes (mesmo do dashboard)
-  const USER_ID = 'c987f42a-abf7-4412-8b73-18947348ae64';
+  // Puxa o usuário logado do contexto de autenticação
+  const { usuario } = useAuth(); 
+  
+  // Usa o ID real. Se por algum motivo não houver usuário, passa vazio para não quebrar a tela
+  const USER_ID = usuario?.id || '';
 
   // Estados principais
   const [transacoes, setTransacoes] = useState<Transacao[]>([]);

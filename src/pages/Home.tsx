@@ -11,6 +11,7 @@ import {
   BarChart3
 } from 'lucide-react';
 import { dashboardService } from '../services/api';
+import { useAuth } from '../contexts/AuthContext';
 import type { ApiResponse, DashboardResponse } from '../types';
 import { formatCurrency, formatPercentage } from '../types';
 
@@ -19,8 +20,7 @@ import { formatCurrency, formatPercentage } from '../types';
  * Exibe métricas financeiras principais e resumo rápido
  */
 const Home: React.FC = () => {
-  // ID do usuário fixo para testes (substituir por autenticação real depois)
-  const USER_ID = 'c987f42a-abf7-4412-8b73-18947348ae64'; // UUID de exemplo
+  const { usuario } = useAuth();
 
   const [dashboardData, setDashboardData] = useState<DashboardResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -28,14 +28,16 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     fetchDashboardData();
-  }, []);
+  }, [usuario?.id]);
 
   const fetchDashboardData = async () => {
     try {
       setIsLoading(true);
       setError(null);
 
-      const response = await dashboardService.getDashboardRapido(USER_ID);
+      if (!usuario?.id) throw new Error('Usuário não autenticado');
+
+      const response = await dashboardService.getDashboardRapido(usuario.id);
       const apiResponse: ApiResponse<DashboardResponse> = response.data;
 
       if (apiResponse.data) {
@@ -57,7 +59,7 @@ const Home: React.FC = () => {
     {
       title: 'Patrimônio Total',
       value: dashboardData?.patrimonioTotal || 0,
-      change: 2.5,
+      change: 0,
       icon: <TrendingUp className="w-6 h-6" />,
       colorClass: 'text-green-600',
       bgColorClass: 'bg-green-50',
@@ -66,7 +68,7 @@ const Home: React.FC = () => {
     {
       title: 'Saldo das Contas',
       value: dashboardData?.saldoTotalContas || 0,
-      change: 1.8,
+      change: 0,
       icon: <Wallet className="w-6 h-6" />,
       colorClass: 'text-blue-600',
       bgColorClass: 'bg-blue-50',
@@ -75,7 +77,7 @@ const Home: React.FC = () => {
     {
       title: 'Receitas do Mês',
       value: dashboardData?.resumoMesAtual?.receitas || 0,
-      change: 3.7,
+      change: 0,
       icon: <DollarSign className="w-6 h-6" />,
       colorClass: 'text-green-600',
       bgColorClass: 'bg-green-50',
@@ -84,7 +86,7 @@ const Home: React.FC = () => {
     {
       title: 'Despesas do Mês',
       value: dashboardData?.resumoMesAtual?.despesas || 0,
-      change: -2.1,
+      change: 0,
       icon: <CreditCard className="w-6 h-6" />,
       colorClass: 'text-red-600',
       bgColorClass: 'bg-red-50',
@@ -102,7 +104,7 @@ const Home: React.FC = () => {
     {
       title: 'Saldo Mensal',
       value: dashboardData?.resumoMesAtual?.saldo || 0,
-      change: 60.7,
+      change: 0,
       icon: <BarChart3 className="w-6 h-6" />,
       colorClass: (dashboardData?.resumoMesAtual?.saldo || 0) >= 0 ? 'text-green-600' : 'text-red-600',
       bgColorClass: (dashboardData?.resumoMesAtual?.saldo || 0) >= 0 ? 'bg-green-50' : 'bg-red-50',

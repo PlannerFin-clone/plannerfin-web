@@ -3,14 +3,18 @@ import { Plus, Edit2, Trash2, Target, AlertCircle, X, TrendingDown, TrendingUp, 
 import { orcamentoService, categoriaService } from '../services/api';
 import type { ApiResponse, Orcamento, OrcamentoRequest, Categoria } from '../types';
 import { formatCurrency, formatPercentage, formatDate } from '../types';
+import { useAuth } from '../contexts/AuthContext';
 
 /**
  * Página de Gestão de Orçamentos Mensais
  * Exibe orçamentos com barras de progresso calculadas a partir das transações reais
  */
 const Orcamentos: React.FC = () => {
-  // ID do usuário fixo para testes
-  const USER_ID = 'c987f42a-abf7-4412-8b73-18947348ae64';
+  // Puxa o usuário logado do contexto de autenticação
+  const { usuario } = useAuth(); 
+  
+  // Usa o ID real. Se por algum motivo não houver usuário, passa vazio para não quebrar a tela
+  const USER_ID = usuario?.id || '';
 
   // Estados principais
   const [orcamentos, setOrcamentos] = useState<Orcamento[]>([]);

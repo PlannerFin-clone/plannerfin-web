@@ -15,8 +15,10 @@ import {
   BarChart3,
   Shield,
   FileText,
-  Tag
+  Tag,
+  LogOut
 } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 import type { NavItem } from '../types';
 
 /**
@@ -24,6 +26,8 @@ import type { NavItem } from '../types';
  * Design inspirado em aplicativos financeiros modernos
  */
 const Sidebar: React.FC = () => {
+  const { usuario, logout } = useAuth();
+
   // Itens de navegação principais
   const mainNavItems: NavItem[] = [
     { label: 'Dashboard', href: '/', icon: 'Home', active: true },
@@ -63,6 +67,7 @@ const Sidebar: React.FC = () => {
     Shield: <Shield className="w-5 h-5" />,
     FileText: <FileText className="w-5 h-5" />,
     Tag: <Tag className="w-5 h-5" />,
+    LogOut: <LogOut className="w-5 h-5" />,
   };
 
   return (
@@ -159,11 +164,15 @@ const Sidebar: React.FC = () => {
             <User className="w-5 h-5 text-white" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium truncate">João Silva</p>
-            <p className="text-xs text-gray-400 truncate">joao@email.com</p>
+            <p className="text-sm font-medium truncate">{usuario?.nome || 'Usuário'}</p>
+            <p className="text-xs text-gray-400 truncate">{usuario?.email || 'email@exemplo.com'}</p>
           </div>
-          <button className="text-gray-400 hover:text-white transition-colors">
-            <Settings className="w-5 h-5" />
+          <button
+            onClick={logout}
+            className="text-gray-400 hover:text-red-400 transition-colors"
+            title="Sair"
+          >
+            <LogOut className="w-5 h-5" />
           </button>
         </div>
       </div>

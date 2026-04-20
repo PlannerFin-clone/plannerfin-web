@@ -3,14 +3,18 @@ import { Plus, Edit2, Trash2, Tag, AlertCircle, X, TrendingUp, TrendingDown } fr
 import { categoriaService } from '../services/api';
 import type { ApiResponse, Categoria, CategoriaRequest } from '../types';
 import { TipoTransacao, formatDate } from '../types';
+import { useAuth } from '../contexts/AuthContext';
 
 /**
  * Página de Gestão de Categorias
  * Exibe categorias em lista com badges por tipo (Receita/Despesa)
  */
 const Categorias: React.FC = () => {
-  // ID do usuário fixo para testes
-  const USER_ID = 'c987f42a-abf7-4412-8b73-18947348ae64';
+  // Puxa o usuário logado do contexto de autenticação
+  const { usuario } = useAuth(); 
+  
+  // Usa o ID real. Se por algum motivo não houver usuário, passa vazio para não quebrar a tela
+  const USER_ID = usuario?.id || '';
 
   // Estados principais
   const [categorias, setCategorias] = useState<Categoria[]>([]);
@@ -334,7 +338,7 @@ const Categorias: React.FC = () => {
                 </div>
 
                 {/* Ordem (se existir) */}
-                {categoria.ordem > 0 && (
+                {categoria.ordem != null && categoria.ordem > 0 && (
                   <div className="mt-4 flex items-center text-sm text-gray-500">
                     <div className="px-2 py-1 bg-gray-100 rounded">Ordem: {categoria.ordem}</div>
                   </div>
