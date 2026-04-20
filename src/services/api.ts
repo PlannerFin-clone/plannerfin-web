@@ -5,7 +5,8 @@ import type { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axio
  * Configuração da instância Axios para o backend Spring Boot
  */
 const api: AxiosInstance = axios.create({
-  baseURL: 'http://localhost:8080/api',
+  //baseURL: 'http://localhost:8080/api',
+  baseURL: 'https://plannerfin-api.onrender.com',
   timeout: 10000, // 10 segundos
   headers: {
     'Content-Type': 'application/json',
