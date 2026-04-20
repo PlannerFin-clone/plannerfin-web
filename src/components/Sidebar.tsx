@@ -13,7 +13,6 @@ import {
   User,
   Wallet,
   BarChart3,
-  FileText,
   Tag,
   LogOut,
   ChevronDown,
@@ -21,7 +20,6 @@ import {
   Shield
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import type { NavItem } from '../types';
 
 interface MenuItem {
   label: string;
@@ -119,10 +117,10 @@ const Sidebar: React.FC = () => {
           <p className="text-lg font-bold truncate">
             {usuario?.nome?.split(' ')[0] || 'Usuário'}
           </p>
-          <span className="text-xs text-green-400 mt-2 flex items-center gap-1">
-            <span className="w-2 h-2 bg-green-500 rounded-full inline-block"></span>
+          <p className="text-xs text-green-400 mt-2 flex items-center gap-1">
+            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
             Sistema ativo e sincronizado
-          </span>
+          </p>
         </div>
       </div>
 

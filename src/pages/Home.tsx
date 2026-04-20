@@ -242,7 +242,7 @@ const Home: React.FC = () => {
                   </Pie>
                   <Tooltip
                     formatter={(value) => [formatCurrency(Number(value)), 'Valor']}
-                    labelFormatter={(label, payload) => {
+                    labelFormatter={(_label, payload) => {
                       if (!payload || payload.length === 0) return '';
                       return payload[0].payload.categoriaNome;
                     }}

@@ -209,16 +209,6 @@ const Orcamentos: React.FC = () => {
     }
   };
 
-  // Obter cor da categoria (fallback para cor padrão)
-  const getCategoriaCor = (orcamento: Orcamento) => {
-    if (orcamento.categoriaCor) return orcamento.categoriaCor;
-
-    // Fallback baseado no ID da categoria
-    const colors = ['bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-pink-500', 'bg-orange-500', 'bg-teal-500'];
-    const hash = orcamento.categoriaId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    return colors[hash % colors.length];
-  };
-
   // Obter cor da barra de progresso baseada no percentual de uso
   const getProgressBarColor = (percentual: number, estourado: boolean) => {
     if (estourado) return 'bg-red-600';

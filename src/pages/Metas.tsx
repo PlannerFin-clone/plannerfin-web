@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Plus, Edit2, Trash2, Target, AlertCircle, X, TrendingUp, TrendingDown, Calendar, PiggyBank, Trophy, Clock, DollarSign, CheckCircle } from 'lucide-react';
+import { Plus, Edit2, Trash2, Target, AlertCircle, X, TrendingUp, PiggyBank, Trophy, Clock, DollarSign, CheckCircle } from 'lucide-react';
 import { metaService } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 import type { ApiResponse, Meta, MetaRequest, MetaStats } from '../types';
