@@ -6,7 +6,7 @@ import type { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axio
  */
 const api: AxiosInstance = axios.create({
   //baseURL: 'http://localhost:8080/api',
-  baseURL: 'https://plannerfin-api.onrender.com/api',
+  baseURL: import.meta.env.VITE_API_URL,
   timeout: 60000, // 60 segundos
   headers: {
     'Content-Type': 'application/json',
